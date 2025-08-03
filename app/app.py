@@ -7,11 +7,11 @@ import palmerpenguins
 
 df = palmerpenguins.load_penguins()
 
-ui.page_opts(title="Penguins dashboard", fillable=True)
+ui.page_opts(title="Palmer Penguins data dashboard", fillable=True)
 
 
-with ui.sidebar(title="Filter controls"):
-    ui.input_slider("mass", "Mass", 2000, 6000, 6000)
+with ui.sidebar(title="Filter Penguins Data"):
+    ui.input_slider("mass", "Maximum Body Mass (grams)", 2000, 6000, 6000)
     ui.input_checkbox_group(
         "species",
         "Species",
@@ -50,21 +50,21 @@ with ui.sidebar(title="Filter controls"):
 
 with ui.layout_column_wrap(fill=False):
     with ui.value_box(showcase=icon_svg("earlybirds")):
-        "Number of penguins"
+        "Total penguins matching filters"
 
         @render.text
         def count():
             return filtered_df().shape[0]
 
     with ui.value_box(showcase=icon_svg("ruler-horizontal")):
-        "Average bill length"
+        "Average bill length (mm)"
 
         @render.text
         def bill_length():
             return f"{filtered_df()['bill_length_mm'].mean():.1f} mm"
 
     with ui.value_box(showcase=icon_svg("ruler-vertical")):
-        "Average bill depth"
+        "Average bill depth (mm)"
 
         @render.text
         def bill_depth():
@@ -73,7 +73,7 @@ with ui.layout_column_wrap(fill=False):
 
 with ui.layout_columns():
     with ui.card(full_screen=True):
-        ui.card_header("Bill length and depth")
+        ui.card_header("Bill Length vs. Bill Depth Scatterplot")
 
         @render.plot
         def length_depth():
