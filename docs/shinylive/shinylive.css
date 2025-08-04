@@ -8,10 +8,10 @@
   font-style: normal;
 }
 :root {
-  --colors-grey: rgb(148, 100, 100);
-  --colors-blue: #d8e97b;
-  --colors-blue-dark: hsl(123, 66%, 30%);
-  --colors-red: #a30d83;
+  --colors-grey: grey;
+  --colors-blue: #007bc2;
+  --colors-blue-dark: hsl(207, 69%, 35%);
+  --colors-red: #c10000;
   --colors-white: white;
   --colors-bg: white;
   --colors-fg: #333;
@@ -74,7 +74,7 @@
   grid-area: viewer;
 }
 button {
-  background-color: var(--colors-pink, #d8e97b);
+  background-color: var(--colors-blue);
   color: var(--colors-white);
   font-family: var(--font-face);
   font-size: var(--font-size);
@@ -192,7 +192,7 @@ button:disabled {
 .HeaderBar {
   height: 30px;
   padding: 3px 8px;
-  background-color: #5fa5ce;
+  background-color: #007BC2;
   font-family: var(--font-face);
   font-size: 1.1rem;
   color: var(--colors-white);
