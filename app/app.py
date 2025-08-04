@@ -24,11 +24,11 @@ with ui.sidebar(title="Filter Penguins Data"):
         selected=["Adelie", "Gentoo", "Chinstrap"],
     )
     ui.input_radio_buttons(
-    "chart_type",
-    "Chart Type",
-    choices=["Scatterplot", "Histogram"],
-    selected="Scatterplot"
-)
+        "chart_type",
+        "Chart Type",
+        choices=["Scatterplot", "Histogram"],
+        selected="Scatterplot"
+    )
     # Add helpful resource links
     ui.hr()
     ui.h6("Links")
@@ -90,28 +90,25 @@ with ui.layout_columns():
     with ui.card(full_screen=True):
         # Card showing scatterplot of bill length vs. depth
         ui.card_header("Bill Length vs. Bill Depth Scatterplot")
-        ui.output_plot("length_depth", height="400px")  # 👈 Added this line to fix render
 
-    @render.plot(id="length_depth")  # 👈 Explicit ID added
-    def length_depth():
-        df = filtered_df().dropna(subset=["bill_length_mm", "bill_depth_mm"])  # 👈 Drop missing values
-        if df.empty:
-            return None
-        if input.chart_type() == "Histogram":
-            return sns.histplot(
-            data=df,
-            x="bill_length_mm",
-            hue="species",
-            multiple="stack",
-            kde=True
-        )
-        else:
-            return sns.scatterplot(
-            data=df,
-            x="bill_length_mm",
-            y="bill_depth_mm",
-            hue="species"
-        )
+        # ✅ FIXED: Moved render.plot inside the card
+        @render.plot
+        def length_depth():
+            if input.chart_type() == "Histogram":
+                return sns.histplot(
+                    data=filtered_df(),
+                    x="bill_length_mm",
+                    hue="species",
+                    multiple="stack",
+                    kde=True
+                )
+            else:
+                return sns.scatterplot(
+                    data=filtered_df(),
+                    x="bill_length_mm",
+                    y="bill_depth_mm",
+                    hue="species"
+                )
 
     with ui.card(full_screen=True):
         # Card showing filtered penguin data in a table
@@ -135,4 +132,7 @@ def filtered_df():
     filt_df = df[df["species"].isin(input.species())]
     # Further filter by selected body mass threshold
     filt_df = filt_df.loc[filt_df["body_mass_g"] < input.mass()]
+
+    # Drop rows with missing values needed for plotting
+    filt_df = filt_df.dropna(subset=["bill_length_mm", "bill_depth_mm", "body_mass_g", "species"])
     return filt_df
