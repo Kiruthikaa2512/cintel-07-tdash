@@ -23,7 +23,12 @@ with ui.sidebar(title="Filter Penguins Data"):
         ["Adelie", "Gentoo", "Chinstrap"],
         selected=["Adelie", "Gentoo", "Chinstrap"],
     )
-
+    ui.input_radio_buttons(
+    "chart_type",
+    "Chart Type",
+    choices=["Scatterplot", "Histogram"],
+    selected="Scatterplot"
+)
     # Add helpful resource links
     ui.hr()
     ui.h6("Links")
@@ -86,14 +91,23 @@ with ui.layout_columns():
         # Card showing scatterplot of bill length vs. depth
         ui.card_header("Bill Length vs. Bill Depth Scatterplot")
 
-        @render.plot
-        def length_depth():
+    @render.plot
+    def length_depth():
+        if input.chart_type() == "Histogram":
+            return sns.histplot(
+            data=filtered_df(),
+            x="bill_length_mm",
+            hue="species",
+            multiple="stack",
+            kde=True
+        )
+        else:
             return sns.scatterplot(
-                data=filtered_df(),
-                x="bill_length_mm",
-                y="bill_depth_mm",
-                hue="species",
-            )
+            data=filtered_df(),
+            x="bill_length_mm",
+            y="bill_depth_mm",
+            hue="species"
+        )
 
     with ui.card(full_screen=True):
         # Card showing filtered penguin data in a table
