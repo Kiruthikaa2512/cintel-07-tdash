@@ -90,12 +90,16 @@ with ui.layout_columns():
     with ui.card(full_screen=True):
         # Card showing scatterplot of bill length vs. depth
         ui.card_header("Bill Length vs. Bill Depth Scatterplot")
+        ui.output_plot("length_depth", height="400px")  # 👈 Added this line to fix render
 
-    @render.plot
+    @render.plot(id="length_depth")  # 👈 Explicit ID added
     def length_depth():
+        df = filtered_df().dropna(subset=["bill_length_mm", "bill_depth_mm"])  # 👈 Drop missing values
+        if df.empty:
+            return None
         if input.chart_type() == "Histogram":
             return sns.histplot(
-            data=filtered_df(),
+            data=df,
             x="bill_length_mm",
             hue="species",
             multiple="stack",
@@ -103,7 +107,7 @@ with ui.layout_columns():
         )
         else:
             return sns.scatterplot(
-            data=filtered_df(),
+            data=df,
             x="bill_length_mm",
             y="bill_depth_mm",
             hue="species"
