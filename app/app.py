@@ -11,6 +11,24 @@ df = palmerpenguins.load_penguins()
 # Set up page options like title and layout behavior
 ui.page_opts(title="Palmer Penguins data dashboard", fillable=True)
 
+# ✅ Add custom styles to improve visual appearance
+ui.tags.style(
+    """
+    .value-box {
+        background-color: #e6f2ff !important;
+        color: #003366 !important;
+        font-size: 1.1rem;
+    }
+    .card-header {
+        background-color: #004080 !important;
+        color: white !important;
+        font-weight: bold;
+        font-size: 1.1rem;
+        padding: 10px;
+    }
+    """
+)
+
 # Define the sidebar with interactive controls
 with ui.sidebar(title="Filter Penguins Data"):
     # Slider to select the maximum body mass
@@ -88,6 +106,7 @@ with ui.layout_columns():
 
         @render.plot
         def length_depth():
+            sns.set_palette("Set2")  # ✅ Custom chart colors
             return sns.scatterplot(
                 data=filtered_df(),
                 x="bill_length_mm",
