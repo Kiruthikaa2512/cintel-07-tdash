@@ -98,6 +98,13 @@ with ui.layout_column_wrap(fill=False):
         def bill_depth():
             return f"{filtered_df()['bill_depth_mm'].mean():.1f} mm"
 
+    # 🔹 NEW ADDITION #1: 4th value box for average body mass
+    with ui.value_box(showcase=icon_svg("weight")):
+        "Average body mass (g)"
+        @render.text
+        def avg_mass():
+            return f"{filtered_df()['body_mass_g'].mean():.0f} g"
+
 # Add plots and data tables in a column layout
 with ui.layout_columns():
     with ui.card(full_screen=True):
@@ -128,6 +135,15 @@ with ui.layout_columns():
                 "body_mass_g",
             ]
             return render.DataGrid(filtered_df()[cols], filters=True)
+
+    # 🔹 NEW ADDITION #2: Species count bar chart
+    with ui.card(full_screen=True):
+        ui.card_header("Penguin Count by Species")
+
+        @render.plot
+        def count_by_species():
+            sns.set_palette("Set2")
+            return sns.countplot(data=filtered_df(), x="species")
 
 # Define a reactive expression that filters the dataset based on user input
 @reactive.calc
