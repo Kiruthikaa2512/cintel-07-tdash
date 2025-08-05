@@ -4,14 +4,25 @@ from faicons import icon_svg
 from shiny import reactive
 from shiny.express import input, render, ui
 import palmerpenguins
+import random
 
 # Load the Palmer Penguins dataset
 df = palmerpenguins.load_penguins()
 
+# Bonus: List of penguin fun facts
+penguin_facts = [
+    "Penguins can drink sea water — their glands filter the salt!",
+    "Gentoo penguins can swim up to 22 miles per hour.",
+    "Penguins huddle together to keep warm in extreme cold.",
+    "Chinstrap penguins are named for the thin black line under their heads.",
+    "Emperor penguins can dive deeper than 500 meters."
+]
+
+
 # Set up page options like title and layout behavior
 ui.page_opts(title="Palmer Penguins data dashboard", fillable=True)
 
-# ✅ Add custom styles to improve visual appearance
+#  Add custom styles to improve visual appearance
 ui.tags.style(
     """
     .value-box {
@@ -98,13 +109,6 @@ with ui.layout_column_wrap(fill=False):
         def bill_depth():
             return f"{filtered_df()['bill_depth_mm'].mean():.1f} mm"
 
-    # 🔹 NEW ADDITION #1: 4th value box for average body mass
-    with ui.value_box(showcase=icon_svg("weight")):
-        "Average body mass (g)"
-        @render.text
-        def avg_mass():
-            return f"{filtered_df()['body_mass_g'].mean():.0f} g"
-
 # Add plots and data tables in a column layout
 with ui.layout_columns():
     with ui.card(full_screen=True):
@@ -113,7 +117,7 @@ with ui.layout_columns():
 
         @render.plot
         def length_depth():
-            sns.set_palette("Set2")  # ✅ Custom chart colors
+            sns.set_palette("Set2")  # Custom chart colors
             return sns.scatterplot(
                 data=filtered_df(),
                 x="bill_length_mm",
@@ -135,15 +139,12 @@ with ui.layout_columns():
                 "body_mass_g",
             ]
             return render.DataGrid(filtered_df()[cols], filters=True)
-
-    # 🔹 NEW ADDITION #2: Species count bar chart
-    with ui.card(full_screen=True):
-        ui.card_header("Penguin Count by Species")
-
-        @render.plot
-        def count_by_species():
-            sns.set_palette("Set2")
-            return sns.countplot(data=filtered_df(), x="species")
+         # Bonus: Fun Fact Card
+    with ui.card():
+        ui.card_header("Random Penguin Fun Fact")
+        @render.text
+        def fun_fact():
+            return random.choice(penguin_facts)
 
 # Define a reactive expression that filters the dataset based on user input
 @reactive.calc
